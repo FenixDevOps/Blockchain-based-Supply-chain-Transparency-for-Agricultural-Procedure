@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5005/api';
 const ROLES = ['Farmer', 'Processor', 'Distributor', 'Retailer', 'Consumer'];
 
 const COLORS = {
