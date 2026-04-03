@@ -71,12 +71,14 @@
     }
   }
 
-  // If opened directly from QR Code Link
-  if (batchId) {
-    fetchTrace(batchId);
-  } else {
-    // Open Web Camera
-    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+  // Function to start camera manually (improves mobile compatibility)
+  function startScanner() {
+    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+      fps: 10, 
+      qrbox: {width: 250, height: 250},
+      aspectRatio: 1.0
+    }, false);
+
     html5QrcodeScanner.render((decodedText, decodedResult) => {
       html5QrcodeScanner.clear();
       if(decodedText.includes('?batch=')) {
@@ -85,7 +87,22 @@
       } else {
          alert("Invalid Agrichain QR code!");
       }
-    }, (error) => {});
+    }, (error) => {
+      // Quietly log scanner errors
+      console.warn("Scanner Error:", error);
+    });
+  }
+
+  // If opened directly from QR Code Link
+  if (batchId) {
+    fetchTrace(batchId);
+  } else {
+    // Show a start button for mobile to trigger camera permission
+    document.getElementById('reader').innerHTML = `
+      <div style="padding: 20px; text-align: center;">
+        <button onclick="startScanner()" style="background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: 600;">📷 Start Camera Scanner</button>
+      </div>
+    `;
   }
 </script>
 </body>
