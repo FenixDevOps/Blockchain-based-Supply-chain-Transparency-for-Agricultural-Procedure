@@ -21,7 +21,7 @@ const createMockProduct = async (name, cropType, farmerName, origin, kg, temp, h
     const isAnomalous = temp > 30 || hum > 80;
     const batchId = crypto.randomBytes(4).toString('hex').toUpperCase();
 
-    const trackingUrl = `http://localhost:5005/scan.html?batch=${batchId}`;
+    const trackingUrl = `http://localhost:5000/scan.html?batch=${batchId}`;
     const qrCodeImage = await QRCode.toDataURL(trackingUrl, { color: { dark: '#000000', light: '#ffffff' } });
 
     const lastTx = await BlockchainTransaction.findOne().sort({ index: -1 });
