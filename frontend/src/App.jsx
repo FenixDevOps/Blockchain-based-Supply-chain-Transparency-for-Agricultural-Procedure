@@ -312,12 +312,12 @@ export default function App() {
                           </div>
                           <div
                             style={{background:COLORS.bg,padding:6,borderRadius:10,border:`1px solid ${COLORS.cardBorder}`,cursor:'zoom-in',position:'relative'}}
-                            onMouseEnter={()=>setHoveredQR({batchId:p.batch_id,name:p.name,url:`${window.location.origin}/scan.html?batch=${p.batch_id}`})}
+                            onMouseEnter={()=>setHoveredQR({batchId:p.batch_id,name:p.name,url:`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`})}
                             onMouseLeave={()=>setHoveredQR(null)}
-                            onClick={e=>{e.stopPropagation();setHoveredQR(hoveredQR?.batchId===p.batch_id?null:{batchId:p.batch_id,name:p.name,url:`${window.location.origin}/scan.html?batch=${p.batch_id}`});}}
+                            onClick={e=>{e.stopPropagation();setHoveredQR(hoveredQR?.batchId===p.batch_id?null:{batchId:p.batch_id,name:p.name,url:`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`});}}
                             title="Hover to enlarge QR for scanning"
                           >
-                            <QRCodeSVG value={`${window.location.origin}/scan.html?batch=${p.batch_id}`} size={44} level="L" bgColor="#f2fbf4"/>
+                            <QRCodeSVG value={`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`} size={44} level="L" bgColor="#f2fbf4"/>
                             <div style={{position:'absolute',bottom:2,right:2,fontSize:8,color:COLORS.primary,fontWeight:700,letterSpacing:'0.05em'}}>SCAN</div>
                           </div>
                         </div>
