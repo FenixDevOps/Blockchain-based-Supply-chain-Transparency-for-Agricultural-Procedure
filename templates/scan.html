@@ -1,109 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>QR Product Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="/static/style.css"/>
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-<style>
-  body { padding: 40px; background: var(--bg-color); color: var(--text-main); font-family: var(--font-sans); }
-  .container { max-width: 600px; margin: 0 auto; }
-  .scan-box { background: var(--surface-color); padding: 30px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-md); }
-  .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
-  .detail-row:last-child { border-bottom: none; }
-  .detail-key { color: var(--text-muted); font-weight: 500; }
-  .detail-val { font-weight: 600; text-align: right; }
-  #reader { width: 100%; border: 2px dashed var(--primary); border-radius: 12px; margin-bottom:20px; overflow:hidden;}
-</style>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>AgriChain | Product Authenticity Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        :root {
+            --primary: #16a34a;
+            --primary-light: #dcfce7;
+            --primary-text: #166534;
+            --bg: #f2fbf4;
+            --card: #ffffff;
+            --card-border: #d8f0de;
+            --text: #14532d;
+            --muted: #4d7c60;
+            --subtle: #86a892;
+            --rose: #fff1f2;
+            --rose-text: #9f1239;
+            --rose-border: #fecdd3;
+            --amber: #fef9c3;
+            --amber-text: #854d0e;
+            --blue: #eff6ff;
+            --blue-text: #1e40af;
+            --purple: #f5f3ff;
+            --purple-text: #5b21b6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        .container { max-width: 600px; margin: 0 auto; padding-bottom: 40px; }
+        
+        header { text-align: center; margin-bottom: 30px; }
+        .logo { 
+            display: inline-flex; align-items: center; gap: 10px; 
+            background: var(--primary); color: white; padding: 10px 20px; 
+            border-radius: 12px; margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+        }
+        h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .subtitle { font-size: 14px; color: var(--muted); font-weight: 500; }
+
+        #reader { 
+            width: 100%; border: 2px dashed var(--primary); 
+            border-radius: 16px; margin-bottom: 20px; 
+            overflow: hidden; background: white;
+        }
+
+        .card { 
+            background: var(--card); border: 1px solid var(--card-border); 
+            border-radius: 16px; overflow: hidden; 
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .card-header { padding: 20px; border-bottom: 1px solid var(--card-border); background: var(--primary-light); }
+        .badge { 
+            display: inline-block; padding: 4px 12px; border-radius: 20px; 
+            font-size: 11px; font-weight: 700; text-transform: uppercase; 
+            letter-spacing: 0.05em; margin-bottom: 8px;
+        }
+        .badge-secure { background: var(--primary-light); color: var(--primary-text); border: 1px solid var(--card-border); }
+        .badge-danger { background: var(--rose); color: var(--rose-text); border: 1px solid var(--rose-border); }
+
+        .product-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+        .batch-id { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--subtle); }
+
+        .journey { padding: 20px; }
+        .journey-step { position: relative; padding-left: 45px; margin-bottom: 25px; }
+        .journey-step::before { 
+            content: ''; position: absolute; left: 18px; top: 30px; 
+            bottom: -20px; width: 2px; background: var(--card-border); 
+        }
+        .journey-step:last-child::before { display: none; }
+
+        .step-icon { 
+            position: absolute; left: 0; top: 0; width: 38px; height: 38px; 
+            border-radius: 10px; display: flex; align-items: center; 
+            justify-content: center; font-weight: 800; color: white;
+            z-index: 2;
+        }
+        .step-info { 
+            background: var(--bg); padding: 12px 16px; border-radius: 12px; 
+            border: 1px solid var(--card-border);
+        }
+        .step-role { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+        .step-actor { font-size: 14px; font-weight: 700; color: var(--text); }
+        .step-meta { font-size: 11px; color: var(--muted); margin-top: 4px; display: flex; gap: 10px; }
+
+        .btn-start { 
+            background: var(--primary); color: white; border: none; 
+            padding: 16px 32px; border-radius: 12px; cursor: pointer; 
+            font-weight: 700; font-family: inherit; width: 100%;
+            box-shadow: 0 4px 14px rgba(22, 163, 74, 0.3);
+            transition: transform 0.2s;
+        }
+        .btn-start:active { transform: scale(0.98); }
+
+        .loading-spinner { 
+            text-align: center; padding: 40px; color: var(--primary); 
+            font-weight: 700; display: none;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-  <h1>Product Authenticity Tracker</h1>
-  <p style="color:var(--text-muted); margin-bottom: 30px;">Scan a product QR code or view the traced batch directly below.</p>
-  
-  <div id="reader"></div>
+    <header>
+        <div class="logo">🌿 AgriChain</div>
+        <h1>Product Authenticity</h1>
+        <p class="subtitle">Blockchain verification for agricultural goods</p>
+    </header>
 
-  <div class="scan-box" id="resultBox" style="display:none;">
-    <h2 style="color: var(--primary); margin-bottom: 20px;" id="r-product"></h2>
-    
-    <div class="detail-row"><span class="detail-key">Farmer / Origin</span><span class="detail-val" id="r-farmer"></span></div>
-    <div class="detail-row"><span class="detail-key">Harvest Check-in</span><span class="detail-val" id="r-date"></span></div>
-    <div class="detail-row"><span class="detail-key">Location</span><span class="detail-val" id="r-location"></span></div>
-    <div class="detail-row"><span class="detail-key">Shipment Status</span><span class="detail-val" id="r-status"></span></div>
-    <div class="detail-row"><span class="detail-key">Chain Verification</span><span class="detail-val mono" id="r-hash"></span></div>
-    
-    <div id="r-alert" style="margin-top: 20px;"></div>
-  </div>
+    <div id="reader">
+        <div style="padding: 40px; text-align: center;">
+            <button onclick="startScanner()" class="btn-start">📷 Start Camera Scanner</button>
+        </div>
+    </div>
 
+    <div id="loading" class="loading-spinner">Verifying Blockchain...</div>
+
+    <div id="resultBox" style="display:none;">
+        <div class="card">
+            <div class="card-header" id="c-header">
+                <div id="r-badge" class="badge badge-secure">Blockchain Verified</div>
+                <h2 class="product-title" id="r-name">Product Name</h2>
+                <div class="batch-id" id="r-batch">#BATCH_ID</div>
+            </div>
+            
+            <div class="journey" id="journeySteps">
+                <!-- Steps will be injected here -->
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="location.reload()" style="background:none; border:none; text-decoration: underline; color: var(--muted); cursor:pointer; font-weight:600;">Scan Another Item</button>
+        </div>
+    </div>
 </div>
 
 <script>
-  const API = 'http://localhost:5000/api/products';
-  // If hitting via local IPs, let's just make it relative to the origin of the server
-  const dynamicApi = window.location.origin + '/api/products';
-  
-  const urlParams = new URLSearchParams(window.location.search);
-  const batchId = urlParams.get('batch');
+    const API_BASE = window.location.origin + '/api';
 
-  async function fetchTrace(batch) {
-    try {
-      const res = await fetch(`${dynamicApi}/trace/${batch}`);
-      if (!res.ok) alert("QR Code batch not found!");
-      const data = await res.json();
-      
-      document.getElementById('reader').style.display = 'none';
-      document.getElementById('resultBox').style.display = 'block';
-      
-      document.getElementById('r-product').innerText = data.productName;
-      document.getElementById('r-farmer').innerText = data.farmerName;
-      document.getElementById('r-date').innerText = new Date(data.harvestDate).toLocaleString();
-      document.getElementById('r-location').innerText = data.location;
-      document.getElementById('r-status').innerText = data.shipmentStatus;
-      document.getElementById('r-hash').innerText = data.blockchainTxHash.slice(0, 15) + '...';
+    const urlParams = new URLSearchParams(window.location.search);
+    const batchId = urlParams.get('batch');
 
-      if(data.isAnomalous) {
-        document.getElementById('r-alert').innerHTML = `<div class="tag tag-danger">⚠️ High Risk: Temperature/Humidity Breach Detected</div>`;
-      }
-    } catch(e) {
-      console.error(e);
+    function getRoleStyles(role) {
+        const styles = {
+            'Farmer': { icon: '🚜', bg: '#16a34a' },
+            'Processor': { icon: '🏭', bg: '#d97706' },
+            'Distributor': { icon: '🚛', bg: '#2563eb' },
+            'Retailer': { icon: '🏪', bg: '#e11d48' },
+            'Consumer': { icon: '🛒', bg: '#7c3aed' }
+        };
+        return styles[role] || { icon: '📦', bg: '#4d7c60' };
     }
-  }
 
-  // Function to start camera manually (improves mobile compatibility)
-  function startScanner() {
-    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-      fps: 10, 
-      qrbox: {width: 250, height: 250},
-      aspectRatio: 1.0
-    }, false);
+    async function fetchTrace(batch) {
+        document.getElementById('reader').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+        
+        try {
+            const res = await fetch(`${API_BASE}/trace/${batch}`);
+            if (!res.ok) throw new Error("Batch not found on blockchain");
+            const data = await res.json();
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('resultBox').style.display = 'block';
+            
+            const product = data.product;
+            document.getElementById('r-name').innerText = product.name;
+            document.getElementById('r-batch').innerText = `# ${product.batch_id}`;
 
-    html5QrcodeScanner.render((decodedText, decodedResult) => {
-      html5QrcodeScanner.clear();
-      if(decodedText.includes('?batch=')) {
-        const batch = decodedText.split('?batch=')[1];
-        fetchTrace(batch);
-      } else {
-         alert("Invalid Agrichain QR code!");
-      }
-    }, (error) => {
-      // Quietly log scanner errors
-      console.warn("Scanner Error:", error);
-    });
-  }
+            if(product.is_anomalous) {
+                document.getElementById('r-badge').className = 'badge badge-danger';
+                document.getElementById('r-badge').innerText = '⚠️ Anomaly Detected';
+                document.getElementById('c-header').style.background = 'var(--rose)';
+            }
 
-  // If opened directly from QR Code Link
-  if (batchId) {
-    fetchTrace(batchId);
-  } else {
-    // Show a start button for mobile to trigger camera permission
-    document.getElementById('reader').innerHTML = `
-      <div style="padding: 20px; text-align: center;">
-        <button onclick="startScanner()" style="background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: 600;">📷 Start Camera Scanner</button>
-      </div>
-    `;
-  }
+            const journeyWrap = document.getElementById('journeySteps');
+            journeyWrap.innerHTML = '';
+
+            data.journey.reverse().forEach(step => {
+                const s = getRoleStyles(step.data.role);
+                const stepEl = document.createElement('div');
+                stepEl.className = 'journey-step';
+                stepEl.innerHTML = `
+                    <div class="step-icon" style="background: ${s.bg}">${s.icon}</div>
+                    <div class="step-info">
+                        <div class="step-role" style="color: ${s.bg}">${step.data.role}</div>
+                        <div class="step-actor">${step.data.actor || 'System'}</div>
+                        <div class="step-meta">
+                            <span>📍 ${step.data.location}</span>
+                            <span>🌡️ ${step.data.temperature_c}°C</span>
+                        </div>
+                        <div style="font-size: 10px; color: var(--subtle); margin-top: 6px; font-family: 'JetBrains Mono'">Hash: ${step.hash.slice(0, 20)}...</div>
+                    </div>
+                `;
+                journeyWrap.appendChild(stepEl);
+            });
+
+        } catch(e) {
+            alert(e.message);
+            location.reload();
+        }
+    }
+
+    function startScanner() {
+        const html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+            fps: 10, 
+            qrbox: {width: 250, height: 250},
+            aspectRatio: 1.0
+        }, false);
+
+        html5QrcodeScanner.render((decodedText, decodedResult) => {
+            html5QrcodeScanner.clear();
+            if(decodedText.includes('?batch=')) {
+                const batch = decodedText.split('?batch=')[1].split('&')[0];
+                fetchTrace(batch);
+            } else if (decodedText.length === 8 && !decodedText.includes(' ')) {
+                // If it's just the batch ID
+                fetchTrace(decodedText);
+            } else {
+                alert("Invalid AgriChain Protocol!");
+                location.reload();
+            }
+        }, (error) => {});
+    }
+
+    if (batchId) {
+        fetchTrace(batchId);
+    }
 </script>
 </body>
 </html>
