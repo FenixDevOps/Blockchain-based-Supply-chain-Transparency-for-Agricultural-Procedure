@@ -33,4 +33,8 @@ app.use(express.static(path.join(__dirname, '../templates')));
 app.get('/health', (_, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ AgriChain API running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ AgriChain API is live!`);
+  console.log(`🚀 Port: ${PORT}`);
+  console.log(`🌐 Health: http://localhost:${PORT}/health`);
+});
