@@ -25,7 +25,7 @@ const createProduct = async (req, res) => {
     const isAnomalous = temp > 30 || hum > 80;
     const batchId = crypto.randomBytes(4).toString('hex').toUpperCase();
 
-    const trackingUrl = `http://192.168.1.142:5000/scan.html?batch=${batchId}`;
+    const trackingUrl = `https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${batchId}`;
     const qrCodeImage = await QRCode.toDataURL(trackingUrl, { color: { dark: '#000000', light: '#ffffff' } });
 
     const lastTx = await BlockchainTransaction.findOne().sort({ index: -1 });
@@ -113,25 +113,32 @@ const addStage = async (req, res) => {
 };
 
 const getAllProducts = async (req, res) => {
-  const products = await Product.find().lean();
-  const txs = await BlockchainTransaction.find().lean();
-  
-  const formatted = products.map(p => {
-    const productTxs = txs.filter(t => t.data.batch_id === p.batchId);
-    const stages_completed = productTxs.map(t => t.data.role).filter(Boolean);
-    return {
-      batch_id: p.batchId, name: p.name, origin: p.origin, crop_type: p.cropType,
-      stages_completed: [...new Set(stages_completed)], is_anomalous: p.isAnomalous
-    };
-  });
-  res.json(formatted);
+  try {
+    const products = await Product.find().lean();
+    const txs = await BlockchainTransaction.find().lean();
+    const formatted = products.map(p => {
+      const productTxs = txs.filter(t => t.data.batch_id === p.batchId);
+      const stages_completed = productTxs.map(t => t.data.role).filter(Boolean);
+      return {
+        batch_id: p.batchId, name: p.name, origin: p.origin, crop_type: p.cropType,
+        stages_completed: [...new Set(stages_completed)], is_anomalous: p.isAnomalous
+      };
+    });
+    res.json(formatted);
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
 };
 
 const getStats = async (req, res) => {
-  const total_blocks = await BlockchainTransaction.countDocuments();
-  const total_products = await Product.countDocuments();
-  const anomalous_products = await Product.countDocuments({ isAnomalous: true });
-  res.json({ total_blocks, total_products, anomalous_products });
+  try {
+    const total_blocks = await BlockchainTransaction.countDocuments();
+    const total_products = await Product.countDocuments();
+    const anomalous_products = await Product.countDocuments({ isAnomalous: true });
+    res.json({ total_blocks, total_products, anomalous_products });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
 };
 
 const traceProduct = async (req, res) => {

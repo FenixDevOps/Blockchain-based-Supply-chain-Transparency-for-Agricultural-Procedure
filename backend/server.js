@@ -10,22 +10,22 @@ connectDB();
 
 const app = express();
 
-// PERMISSIVE CORS for production debugging
-app.use(cors()); 
-
+// CORS — allow all origins (safe for a public read-only API)
+app.use(cors());
 app.use(express.json());
+
+// Health / test endpoints (registered BEFORE the router)
+app.get('/api/test', (req, res) => res.json({ message: 'Backend is UP!', timestamp: new Date().toISOString() }));
+app.get('/health',   (_, res) => res.json({ status: 'ok',  timestamp: new Date().toISOString() }));
 
 // API Routes
 app.use('/api', productRoutes);
 
-// Simple test endpoint to verify server is ALIVE without DB
-app.get('/api/test', (req, res) => res.json({ message: "Backend is UP!" }));
-
 // Serve scan.html for QR code mobile scanning
 app.use(express.static(path.join(__dirname, '../templates')));
 
-// Health check — useful for Render uptime monitoring
-app.get('/health', (_, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
+// 404 fallback for unknown API routes
+app.use('/api', (req, res) => res.status(404).json({ error: 'API route not found' }));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {

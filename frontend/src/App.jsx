@@ -146,7 +146,9 @@ export default function App() {
         fetch(`${API}/products`).then(r=>r.json()),
       ]);
       setChain(v); setStats(s); setProducts(p);
-    } catch {}
+    } catch(err) {
+      console.error('AgriChain API error:', err);
+    }
   },[]);
 
   useEffect(() => { fetchAll(); const t=setInterval(fetchAll,12000); return ()=>clearInterval(t); },[fetchAll]);
@@ -200,7 +202,7 @@ export default function App() {
     setLoading(false);
   };
 
-  const tabLabels={dashboard:'Dashboard',register:'New Batch',stage:'Log Stage',trace:'Trace Product',tracking:'Shipment Tracking',explorer:'Block Explorer'};
+  const tabLabels={dashboard:'Dashboard',register:'New Batch',stage:'Log Stage',trace:'Audit Trail',tracking:'Shipment Tracking',explorer:'Block Explorer'};
 
   /* ─────── NAV ITEMS ─────── */
   const navItems = [
@@ -263,7 +265,7 @@ export default function App() {
           <div>
             <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.12em',color:COLORS.subtle}}>{tabLabels[tab]}</div>
             <div style={{fontSize:20,fontWeight:800,color:COLORS.text,letterSpacing:'-0.4px',marginTop:2}}>
-              {{dashboard:'Supply Chain Overview',register:'Initialize New Batch',stage:'Log Lifecycle Stage',trace:'Audit Product Trail',explorer:'Blockchain Explorer'}[tab]}
+              {{dashboard:'Supply Chain Overview',register:'Initialize New Batch',stage:'Log Lifecycle Stage',trace:'Audit Product Trail',tracking:'Live Shipment Tracker',explorer:'Blockchain Explorer'}[tab]}
             </div>
           </div>
           <div style={{fontSize:12,color:COLORS.subtle,fontWeight:500}}>{new Date().toLocaleDateString('en-IN',{weekday:'short',year:'numeric',month:'short',day:'numeric'})}</div>
