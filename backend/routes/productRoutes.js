@@ -13,7 +13,7 @@ router.get('/stats', getStats);
 router.get('/chain', getChain);
 router.get('/verify', verifyChain);
 
-// QR Tracking Data specifically
-router.get('/trace/:batchId', traceProductByQR);
+// QR Tracking Data - Point to full trace for rich mobile UI
+router.get('/trace/:batchId', traceProduct);
 
 module.exports = router;
