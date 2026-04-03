@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>QR Product Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/style.css"/>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<style>
+  body { padding: 40px; background: var(--bg-color); color: var(--text-main); font-family: var(--font-sans); }
+  .container { max-width: 600px; margin: 0 auto; }
+  .scan-box { background: var(--surface-color); padding: 30px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-md); }
+  .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-key { color: var(--text-muted); font-weight: 500; }
+  .detail-val { font-weight: 600; text-align: right; }
+  #reader { width: 100%; border: 2px dashed var(--primary); border-radius: 12px; margin-bottom:20px; overflow:hidden;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Product Authenticity Tracker</h1>
+  <p style="color:var(--text-muted); margin-bottom: 30px;">Scan a product QR code or view the traced batch directly below.</p>
+  
+  <div id="reader"></div>
+
+  <div class="scan-box" id="resultBox" style="display:none;">
+    <h2 style="color: var(--primary); margin-bottom: 20px;" id="r-product"></h2>
+    
+    <div class="detail-row"><span class="detail-key">Farmer / Origin</span><span class="detail-val" id="r-farmer"></span></div>
+    <div class="detail-row"><span class="detail-key">Harvest Check-in</span><span class="detail-val" id="r-date"></span></div>
+    <div class="detail-row"><span class="detail-key">Location</span><span class="detail-val" id="r-location"></span></div>
+    <div class="detail-row"><span class="detail-key">Shipment Status</span><span class="detail-val" id="r-status"></span></div>
+    <div class="detail-row"><span class="detail-key">Chain Verification</span><span class="detail-val mono" id="r-hash"></span></div>
+    
+    <div id="r-alert" style="margin-top: 20px;"></div>
+  </div>
+
+</div>
+
+<script>
+  const API = 'http://localhost:5000/api/products';
+  // If hitting via local IPs, let's just make it relative to the origin of the server
+  const dynamicApi = window.location.origin + '/api/products';
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const batchId = urlParams.get('batch');
+
+  async function fetchTrace(batch) {
+    try {
+      const res = await fetch(`${dynamicApi}/trace/${batch}`);
+      if (!res.ok) alert("QR Code batch not found!");
+      const data = await res.json();
+      
+      document.getElementById('reader').style.display = 'none';
+      document.getElementById('resultBox').style.display = 'block';
+      
+      document.getElementById('r-product').innerText = data.productName;
+      document.getElementById('r-farmer').innerText = data.farmerName;
+      document.getElementById('r-date').innerText = new Date(data.harvestDate).toLocaleString();
+      document.getElementById('r-location').innerText = data.location;
+      document.getElementById('r-status').innerText = data.shipmentStatus;
+      document.getElementById('r-hash').innerText = data.blockchainTxHash.slice(0, 15) + '...';
+
+      if(data.isAnomalous) {
+        document.getElementById('r-alert').innerHTML = `<div class="tag tag-danger">⚠️ High Risk: Temperature/Humidity Breach Detected</div>`;
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  // If opened directly from QR Code Link
+  if (batchId) {
+    fetchTrace(batchId);
+  } else {
+    // Open Web Camera
+    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+    html5QrcodeScanner.render((decodedText, decodedResult) => {
+      html5QrcodeScanner.clear();
+      if(decodedText.includes('?batch=')) {
+        const batch = decodedText.split('?batch=')[1];
+        fetchTrace(batch);
+      } else {
+         alert("Invalid Agrichain QR code!");
+      }
+    }, (error) => {});
+  }
+</script>
+</body>
+</html>

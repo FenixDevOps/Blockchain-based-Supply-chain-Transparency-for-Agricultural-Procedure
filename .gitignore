@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Environment secrets — NEVER commit these
+backend/.env
+.env
+
+# Build output
+frontend/dist/
+frontend/.vite/
+
+# Python legacy (already deleted, just in case)
+venv/
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
