@@ -10,21 +10,16 @@ connectDB();
 
 const app = express();
 
-// CORS — allow local dev + Vercel production
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    /\.vercel\.app$/,           // any Vercel preview URL
-    process.env.FRONTEND_URL,   // set in Render dashboard
-  ].filter(Boolean),
-  credentials: true,
-}));
+// PERMISSIVE CORS for production debugging
+app.use(cors()); 
 
 app.use(express.json());
 
 // API Routes
 app.use('/api', productRoutes);
+
+// Simple test endpoint to verify server is ALIVE without DB
+app.get('/api/test', (req, res) => res.json({ message: "Backend is UP!" }));
 
 // Serve scan.html for QR code mobile scanning
 app.use(express.static(path.join(__dirname, '../templates')));
