@@ -4,7 +4,7 @@ import {
   ShieldCheck, ShieldX, Thermometer, Droplets, MapPin,
   Clock, ArrowRight, AlertTriangle, CheckCircle, Loader2,
   Leaf, Zap, BarChart3, X, ChevronDown, ChevronUp, Sprout,
-  Package2, Factory, Store, User, Timer
+  Package2, Factory, Store, User, Timer, ScanLine, ExternalLink
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -202,7 +202,7 @@ export default function App() {
     setLoading(false);
   };
 
-  const tabLabels={dashboard:'Dashboard',register:'New Batch',stage:'Log Stage',trace:'Audit Trail',tracking:'Shipment Tracking',explorer:'Block Explorer'};
+  const tabLabels={dashboard:'Dashboard',register:'New Batch',stage:'Log Stage',trace:'Audit Trail',tracking:'Shipment Tracking',explorer:'Block Explorer',scan:'Scan QR'};
 
   /* ─────── NAV ITEMS ─────── */
   const navItems = [
@@ -211,6 +211,7 @@ export default function App() {
     { id:'stage',     icon:Truck,           label:'Log Stage'          },
     { id:'tracking',  icon:Package2,        label:'Shipment Tracking'  },
     { id:'trace',     icon:Search,          label:'Audit Trail'        },
+    { id:'scan',      icon:ScanLine,        label:'Scan QR'            },
   ];
 
   return (
@@ -265,7 +266,7 @@ export default function App() {
           <div>
             <div style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.12em',color:COLORS.subtle}}>{tabLabels[tab]}</div>
             <div style={{fontSize:20,fontWeight:800,color:COLORS.text,letterSpacing:'-0.4px',marginTop:2}}>
-              {{dashboard:'Supply Chain Overview',register:'Initialize New Batch',stage:'Log Lifecycle Stage',trace:'Audit Product Trail',tracking:'Live Shipment Tracker',explorer:'Blockchain Explorer'}[tab]}
+              {{dashboard:'Supply Chain Overview',register:'Initialize New Batch',stage:'Log Lifecycle Stage',trace:'Audit Product Trail',tracking:'Live Shipment Tracker',explorer:'Blockchain Explorer',scan:'QR Code Scanner'}[tab]}
             </div>
           </div>
           <div style={{fontSize:12,color:COLORS.subtle,fontWeight:500}}>{new Date().toLocaleDateString('en-IN',{weekday:'short',year:'numeric',month:'short',day:'numeric'})}</div>
@@ -641,6 +642,69 @@ export default function App() {
                   </div>
                 );
               })()}
+            </div>
+          )}
+
+          {/* ─── SCAN QR ─── */}
+          {tab==='scan' && (
+            <div className="tab-enter" style={{maxWidth:760}}>
+              {/* Hero banner */}
+              <div style={{background:`linear-gradient(135deg,${COLORS.primary},#34d399)`,borderRadius:20,padding:'32px 40px',marginBottom:28,display:'flex',alignItems:'center',justifyContent:'space-between',boxShadow:`0 8px 32px ${COLORS.primary}33`}}>
+                <div>
+                  <div style={{fontSize:28,fontWeight:900,color:'#fff',letterSpacing:'-0.5px',marginBottom:8}}>📱 QR Code Scanner</div>
+                  <div style={{fontSize:14,color:'rgba(255,255,255,0.85)',fontWeight:500,maxWidth:380}}>Scan any AgriChain QR code to instantly verify a product's blockchain journey — from Farmer to Consumer.</div>
+                </div>
+                <div style={{width:80,height:80,borderRadius:20,background:'rgba(255,255,255,0.15)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  <ScanLine size={44} color="#fff"/>
+                </div>
+              </div>
+
+              {/* Open scanner button */}
+              <div style={{...S.card,padding:'32px 40px',textAlign:'center',marginBottom:24}}>
+                <ScanLine size={48} style={{color:COLORS.primary,margin:'0 auto 16px',display:'block'}}/>
+                <div style={{fontSize:20,fontWeight:800,color:COLORS.text,marginBottom:8}}>Open Mobile Scanner</div>
+                <div style={{fontSize:13,color:COLORS.muted,marginBottom:24,fontWeight:500}}>Tap to open the full scanner page. Works best on mobile — point your camera at any product QR code.</div>
+                <a
+                  href="https://blockchain-based-supply-chain.onrender.com/scan.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{display:'inline-flex',alignItems:'center',gap:10,padding:'16px 36px',borderRadius:14,background:COLORS.primary,color:'#fff',fontSize:16,fontWeight:800,textDecoration:'none',boxShadow:`0 6px 20px ${COLORS.primary}44`,transition:'all 0.15s'}}
+                >
+                  <ScanLine size={20}/> Launch QR Scanner
+                </a>
+              </div>
+
+              {/* Quick scan tiles for existing products */}
+              <div style={{fontSize:15,fontWeight:800,color:COLORS.text,marginBottom:14}}>Quick Scan — Active Batches</div>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))',gap:14}}>
+                {products.map(p=>(
+                  <a
+                    key={p.batch_id}
+                    href={`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{...S.card,padding:'18px 20px',display:'flex',alignItems:'center',gap:14,textDecoration:'none',transition:'all 0.2s'}}
+                    className="card-hover"
+                  >
+                    <div style={{background:COLORS.primaryLight,borderRadius:12,padding:10,flexShrink:0}}>
+                      <QRCodeSVG value={`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`} size={52} level="L" bgColor={COLORS.primaryLight}/>
+                    </div>
+                    <div style={{overflow:'hidden'}}>
+                      <div style={{fontSize:13,fontWeight:800,color:COLORS.text,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
+                      <div style={{fontFamily:'monospace',fontSize:10,color:COLORS.subtle,marginTop:2}}>#{p.batch_id}</div>
+                      <div style={{display:'flex',alignItems:'center',gap:4,marginTop:6,fontSize:11,color:COLORS.primary,fontWeight:700}}>
+                        <ExternalLink size={11}/> Open Scan
+                      </div>
+                    </div>
+                  </a>
+                ))}
+                {products.length===0 && (
+                  <div style={{...S.card,padding:40,textAlign:'center',gridColumn:'1/-1',borderStyle:'dashed'}}>
+                    <ScanLine size={32} style={{color:COLORS.primary,margin:'0 auto 10px'}}/>
+                    <p style={{color:COLORS.muted,fontWeight:600}}>No batches to scan yet.</p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
