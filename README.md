@@ -25,11 +25,32 @@
 
 ---
 
-## 📸 Preview
+## 📸 Screenshots
 
-| Dashboard | Shipment Tracking | QR Scanner |
-|:-:|:-:|:-:|
-| Supply chain KPIs & live batch ledger | Real-time farmer → consumer journey | Mobile QR scan → instant blockchain lookup |
+### 🖥️ Dashboard — Supply Chain Overview
+![Dashboard](./screenshots/dashboard.png)
+
+---
+
+### 📦 Shipment Tracking — Live Journey Tracker
+![Shipment Tracking](./screenshots/shipment_tracking.png)
+
+---
+
+### 🔍 Audit Trail — Blockchain-Verified Product History
+![Audit Trail](./screenshots/audit_trail.png)
+
+---
+
+### 📷 Scan QR — Quick Scan Hub
+![Scan QR](./screenshots/scan_qr.png)
+
+---
+
+### ⛓️ Block Explorer — Immutable Ledger View
+![Block Explorer](./screenshots/block_explorer.png)
+
+---
 
 > 💡 **Live at:** [blockchain-based-supply-chain-trans.vercel.app](https://blockchain-based-supply-chain-trans.vercel.app/)
 >
