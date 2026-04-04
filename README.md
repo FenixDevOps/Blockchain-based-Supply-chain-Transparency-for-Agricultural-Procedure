@@ -323,7 +323,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 <div align="center">
 
-### Built with 💚 by **Manikanta**
+### Built with  by **Manikanta**
 
 | | |
 |:---:|:---|
@@ -339,7 +339,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 <br/>
 
 [![GitHub](https://img.shields.io/badge/GitHub-FenixDevOps-181717?logo=github&logoColor=white)](https://github.com/FenixDevOps)
-[![Made with ❤️](https://img.shields.io/badge/Made%20with-%F0%9F%92%9A-green)](https://blockchain-based-supply-chain-trans.vercel.app/)
+[![Made with ](https://img.shields.io/badge/Made%20with-%F0%9F%92%9A-green)](https://blockchain-based-supply-chain-trans.vercel.app/)
 
 <br/>
 
