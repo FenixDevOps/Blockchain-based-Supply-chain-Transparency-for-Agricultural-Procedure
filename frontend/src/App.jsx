@@ -312,15 +312,23 @@ export default function App() {
                               <MapPin size={11}/>{p.origin}
                             </div>
                           </div>
-                          <div
-                            style={{background:COLORS.bg,padding:6,borderRadius:10,border:`1px solid ${COLORS.cardBorder}`,cursor:'zoom-in',position:'relative'}}
-                            onMouseEnter={()=>setHoveredQR({batchId:p.batch_id,name:p.name,url:`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`})}
-                            onMouseLeave={()=>setHoveredQR(null)}
-                            onClick={e=>{e.stopPropagation();setHoveredQR(hoveredQR?.batchId===p.batch_id?null:{batchId:p.batch_id,name:p.name,url:`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`});}}
-                            title="Hover to enlarge QR for scanning"
-                          >
-                            <QRCodeSVG value={`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`} size={44} level="L" bgColor="#f2fbf4"/>
-                            <div style={{position:'absolute',bottom:2,right:2,fontSize:8,color:COLORS.primary,fontWeight:700,letterSpacing:'0.05em'}}>SCAN</div>
+                          <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+                            <div
+                              style={{background:COLORS.bg,padding:6,borderRadius:10,border:`1px solid ${COLORS.cardBorder}`,cursor:'zoom-in',position:'relative'}}
+                              onMouseEnter={()=>setHoveredQR({batchId:p.batch_id,name:p.name,url:`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`})}
+                              onMouseLeave={()=>setHoveredQR(null)}
+                              onClick={e=>{e.stopPropagation();setHoveredQR(hoveredQR?.batchId===p.batch_id?null:{batchId:p.batch_id,name:p.name,url:`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`});}}
+                              title="Hover to enlarge QR for scanning"
+                            >
+                              <QRCodeSVG value={`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`} size={44} level="L" bgColor="#f2fbf4"/>
+                            </div>
+                            <a
+                              href={`https://blockchain-based-supply-chain.onrender.com/scan.html?batch=${p.batch_id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={e=>e.stopPropagation()}
+                              style={{fontSize:9,color:'#fff',fontWeight:800,letterSpacing:'0.08em',background:COLORS.primary,padding:'2px 8px',borderRadius:6,textDecoration:'none',display:'inline-block',boxShadow:`0 2px 6px ${COLORS.primary}44`}}
+                            >SCAN</a>
                           </div>
                         </div>
                         <div style={{fontFamily:'monospace',fontSize:11,color:COLORS.subtle,background:COLORS.bg,padding:'4px 10px',borderRadius:7,display:'inline-block',marginBottom:14}}>#{p.batch_id}</div>
@@ -713,9 +721,17 @@ export default function App() {
             <div style={{textAlign:'center'}}>
               <div style={{fontSize:18, fontWeight:800, color:COLORS.text, marginBottom:4}}>{hoveredQR.name}</div>
               <div style={{fontFamily:'monospace', fontSize:12, color:COLORS.subtle, marginBottom:12}}>#{hoveredQR.batchId}</div>
-              <div style={{display:'flex', alignItems:'center', gap:6, justifyContent:'center', background:COLORS.primaryLight, borderRadius:10, padding:'8px 20px'}}>
+              <div style={{display:'flex', alignItems:'center', gap:6, justifyContent:'center', background:COLORS.primaryLight, borderRadius:10, padding:'8px 20px', marginBottom:8}}>
                 <span style={{fontSize:13, fontWeight:700, color:COLORS.primaryText}}>📱 Point your mobile camera to scan</span>
               </div>
+              <a
+                href={hoveredQR.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{display:'inline-flex',alignItems:'center',gap:8,padding:'10px 24px',borderRadius:12,background:COLORS.primary,color:'#fff',fontSize:14,fontWeight:700,textDecoration:'none',boxShadow:`0 4px 14px ${COLORS.primary}44`}}
+              >
+                🔗 Open Scan Page
+              </a>
             </div>
             <button onClick={()=>setHoveredQR(null)} style={{background:'none', border:`1px solid ${COLORS.cardBorder}`, borderRadius:8, padding:'6px 20px', cursor:'pointer', fontSize:13, color:COLORS.muted, fontFamily:'inherit', fontWeight:600}}>
               Close
