@@ -332,23 +332,17 @@ Contributions are welcome! Here's how:
 
 Please follow conventional commits format and ensure code is clean before submitting.
 
----
 
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
 
 ## 👨‍💻 Credits & Author
 
 <div align="center">
 
-### Built with  by **Manikanta**
+### Built with  by **Bathini Manikanta**
 
 | | |
 |:---:|:---|
-| 👤 | **Manikanta** |
+| 👤 | **Bathini Manikanta** |
 | 🎓 | Full Stack Developer |
 | 🔗 | [GitHub: FenixDevOps](https://github.com/FenixDevOps) |
 | 💡 | Designed & developed the entire AgriChain platform — blockchain architecture, MERN stack backend, React dashboard, mobile QR scanner, and cloud deployment |
